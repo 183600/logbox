@@ -12,8 +12,8 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-mod windows;
-mod linux;
+// mod windows;
+// mod linux;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // 初始化终端
@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, event::EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
-    let mut terminal = Terminal::new(backend)?;
+let mut terminal = Terminal::<CrosstermBackend<std::io::Stdout>>::new(backend)?;
 
     // 初始化应用状态
     let mut app = App::new();
@@ -48,11 +48,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn ui<B: ratatui::backend::Backend>(f: &mut ratatui::Frame<B>, app: &App) {
+fn ui(f: &mut ratatui::Frame, app: &App) {
     let chunks = Layout::default()
         .constraints([Constraint::Length(3), Constraint::Min(3)].as_ref())
         .direction(Direction::Vertical)
-        .split(f.size());
+        .split(f.area());
 
     let block = Block::default()
         .title("Window Analysis")
